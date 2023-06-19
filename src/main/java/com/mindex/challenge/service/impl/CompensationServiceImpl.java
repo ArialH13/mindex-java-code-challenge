@@ -27,16 +27,19 @@ public class CompensationServiceImpl implements CompensationService{
 		LOG.debug("Creating compensation [{}]", compensation);
 		
 		if(compensation.getEmployee() == null || compensation.getEmployee().getEmployeeId() == null) {
-			throw new RuntimeException("No employee id found on compensation: " + compensation);
+			throw new RuntimeException("No employee id found in compensation: " + compensation);
 		}
 		
-		//make sure the employee exists, then only store the ID
-		employeeService.read(compensation.getEmployee().getEmployeeId());
-		Employee employee = new Employee();
-		employee.setEmployeeId(compensation.getEmployee().getEmployeeId());
-		compensation.setEmployee(employee);
+		//make sure the employee exists, but only store the ID
+		Employee fullEmployee = employeeService.read(compensation.getEmployee().getEmployeeId());
+		Employee savedEmployee = new Employee();
+		savedEmployee.setEmployeeId(compensation.getEmployee().getEmployeeId());
+		compensation.setEmployee(savedEmployee);
 		
 		compensationRepository.insert(compensation);
+		
+		//return the fully populated compensation
+		compensation.setEmployee(fullEmployee);
 		return compensation;
 	}
 	
@@ -50,6 +53,9 @@ public class CompensationServiceImpl implements CompensationService{
 		if(compensation == null) {
 			throw new RuntimeException("No compensation found for employee id: " + employeeId);
 		}
+		
+		employee = employeeService.read(compensation.getEmployee().getEmployeeId());
+		compensation.setEmployee(employee);
 		
 		return compensation;
 	}
