@@ -19,7 +19,7 @@ public class ReportingStructureController {
 	
     @GetMapping("/reporting-structure/{employeeId}")
     public ReportingStructure read(@PathVariable String employeeId) {
-        LOG.debug("Received reporting structure request for id [{}]", employeeId);
+        LOG.debug("Received reporting structure read request for id [{}]", employeeId);
 
         return reportingStructureService.read(employeeId);
     }

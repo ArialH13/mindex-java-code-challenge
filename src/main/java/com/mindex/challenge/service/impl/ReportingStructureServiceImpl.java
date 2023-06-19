@@ -23,11 +23,13 @@ public class ReportingStructureServiceImpl implements ReportingStructureService{
 	
 	@Override
 	public ReportingStructure read(String employeeId) {
+		LOG.debug("Getting reporting structure for employee with id [{}]", employeeId);
+		
 		ReportingStructure reportingStructure = new ReportingStructure();
 		Employee employee = employeeService.read(employeeId);
 		reportingStructure.setEmployee(employee);
-		
 		int totalReports = 0;
+		LOG.debug("Retrieving all reports of employee with id [{}]", employeeId);
 		if(employee.getDirectReports() != null) {
 			List<Employee> allReports = new ArrayList<Employee>(employee.getDirectReports());
 			for(int i = 0; i < allReports.size(); i++) {
